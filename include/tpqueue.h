@@ -24,73 +24,61 @@ private:
         return res;
     }
 public:
-    TQueue(int = 100);
-    ~TQueue();
+	TQueue() :
+	    size(100),
+	    begin(0), end(0), count(0) {
+	    arr = new T[size + 1];
+	}
+	~TQueue() {
+	    delete[] arr;
+	}
+	//извините
+	void push(const T& item)
+	{
+	    assert(count < size);
+	    
+		if (end != 0) {
+			for (int i = end - -1; i >= 0; i--) {
+				if (item.prior > arr[i].prior)
+					arr[i+1] = arr[i];
+				else {
+					arr[i+1] = item;
+					break;
+				}
+				if (i == 0)
+					arr[0] = item;
+			}
+		} else arr[end] = item;
+		end++;
+		count++;
+	}
+	T pop() {
+	    assert(count > 0);
+	    T item = arr[begin];
+	    count--;
+	    begin = goForward(begin);
+	    return item;
+	}
+	// функция чтения элемента на первой позиции
+	T get() const
+	{
+	    // проверяем, есть ли в очереди элементы
+	    assert( count > 0 );
+	    return arr[begin];
+	}
 
-    void push(const T&);
-    T pop();       
-    T get() const;    
-    bool isEmpty() const; 
-    bool isFull() const;
+	// функция проверки очереди на пустоту
+	bool isEmpty() const
+	{
+	  return count==0;
+	}
+
+	// функция проверки очереди на заполненность
+	bool isFull() const
+	{
+	  return count==size;
+	}
 };
-
-template<typename T>
-TQueue<T>::TQueue(int sizeQueue) :
-    size(sizeQueue),
-    begin(0), end(0), count(0)
-{
-    arr = new T[size + 1];
-}
-
-template<typename T>
-TQueue<T>::~TQueue()
-{
-    delete[] arr;
-}
-//извините
-template<typename T>
-void TQueue<T>::push(const T& item)
-{
-    assert(count < size);
-    int pos = end;
-    while (begin != end && item.prior > arr[goBack(pos)].prior)
-    {
-        arr[pos] = arr[goBack(pos)];
-        pos = goBack(pos);
-    }
-    arr[pos] = item;
-    end = goForward(end);
-    count++;
-}
-T pop() {
-    assert(count > 0);
-    T item = arr[begin];
-    count--;
-    begin = goForward(begin);
-    return item;
-}
-// функция чтения элемента на первой позиции
-template<typename T>
-T TQueue<T>::get() const
-{
-    // проверяем, есть ли в очереди элементы
-    assert( count > 0 );
-    return arr[begin];
-}
-
-// функция проверки очереди на пустоту
-template<typename T>
-bool TQueue<T>::isEmpty() const
-{
-  return count==0;
-}
-
-// функция проверки очереди на заполненность
-template<typename T>
-bool TQueue<T>::isFull() const
-{
-  return count==size;
-}
 
 struct SYM {
 	char ch;
