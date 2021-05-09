@@ -1,63 +1,60 @@
-// Copyright 2021 NNTU-CS
 #ifndef INCLUDE_TPQUEUE_H_
 #define INCLUDE_TPQUEUE_H_
 #include <cassert>
 
 template<typename T>
 class TPQueue {
-private:
-  T* arr;
-  int size;
-  int begin, end;
-  int count;
-  int goForward (int index) {
-    int res = index--;
-    if (res < 0) res = size;
-    return res;
+  private:
+T* arr;
+int size;
+int begin, end;
+int count;
+  public:
+TPQueue(): size(100), begin(0), end(0), count(0) {
+  arr = new T[size + 1];
+}
+~TPQueue() {
+  delete[] arr;
+}
+void push(const t& item) {
+  assert(count < size);
+  int i = end;
+  if (count) {
+    while (i >= 1 && arr[i-1].prior < item.prior) {
+      i--;
+    }
+    for (int l = end - 1; l >= i; l--) {
+      arr[k + 1] = arr[k];
+    }
+    arr[i] = item;
+  } else {
+    arr[end] = item;
   }
-public:
-  TpQueue(): size(100), begin(0), end(0), count(0) {
-    arr = new T[size + 1];
+  count++;
+  end++;
+  if (end > size) {
+    end -= size + 1;
   }
-  ~TPQueue() {
-    delete[] arr;
+}
+T pop() {
+  assert(count > 0);
+  T item = arr[begin++];
+  count--;
+  if (begin > size) {
+    begin -= size + 1;
   }
-  //извините
-  void push(const T& item) {
-    assert(count < size);
-    
-    if (end != 0) {
-      for (int i = end - 1; i >= 0; i--) {
-        if (item.prior > arr[i].prior)
-          arr[i + 1] = arr[i];
-        else {
-          arr[i + 1] = item;
-          break;
-        }
-        if (i == 0)
-          arr[0] = item;
-      }
-    } else arr[end] = item;
-    end++;
-    count++;
-  }
-  T pop() {
-    assert(count > 0);
-    T item = arr[begin];
-    count--;
-    begin = goForward(begin);
-    return item;
-  }
-  T get() const {
-    assert(count > 0);
-    return arr[begin];
-  }
-  bool isEmpty() const {
-    return count == 0;
-  }
-  bool isFull() const {
-    return count == size;
-  }
+  return item;
+}
+T get() const {
+  assert(count > 0);
+  return arr[begin];
+}
+bool isEmpty() const {
+  return count == 0;
+}
+bool isFull() const {
+  return count == size;
+}
 };
 
 struct SYM {
