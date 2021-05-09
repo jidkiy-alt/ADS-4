@@ -4,12 +4,13 @@
 
 template<typename T>
 class TPQueue {
-  private:
+   private:
 T* arr;
 int size;
 int begin, end;
 int count;
-  public:
+  
+   public:
 TPQueue(): size(100), begin(0), end(0), count(0) {
   arr = new T[size + 1];
 }
