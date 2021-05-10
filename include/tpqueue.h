@@ -1,6 +1,12 @@
+// Copyright 2021 NNTU-CS
 #ifndef INCLUDE_TPQUEUE_H_
 #define INCLUDE_TPQUEUE_H_
 #include <cassert>
+
+struct SYM {
+  char ch;
+  int  prior;
+};
 
 template<typename T>
 class TPQueue {
@@ -9,6 +15,7 @@ T* arr;
 int size;
 int begin, end;
 int count;
+
  public:
 TPQueue(): size(100), begin(0), end(0), count(0) {
   arr = new T[size + 1];
@@ -16,7 +23,7 @@ TPQueue(): size(100), begin(0), end(0), count(0) {
 ~TPQueue() {
   delete[] arr;
 }
-void push(const t& item) {
+void push(const T& item) {
   assert(count < size);
   int i = end;
   if (count) {
@@ -24,7 +31,7 @@ void push(const t& item) {
       i--;
     }
     for (int l = end - 1; l >= i; l--) {
-      arr[k + 1] = arr[k];
+      arr[l + 1] = arr[l];
     }
     arr[i] = item;
   } else {
@@ -56,10 +63,4 @@ bool isFull() const {
   return count == size;
 }
 };
-
-struct SYM {
-  char ch;
-  int  prior;
-};
-
 #endif // INCLUDE_TPQUEUE_H_
